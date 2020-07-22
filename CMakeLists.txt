@@ -5,10 +5,6 @@ set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(RC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/build)
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
 include("GeneratePkgConfig.cmake")
 
 option(glew-cmake_BUILD_SHARED "Build the shared glew library" ON)
@@ -62,32 +58,19 @@ endif()
 if(glew-cmake_BUILD_STATIC)
 	add_library(libglew_static STATIC ${LIBGLEW_SRCS})
 
-	set_target_properties(libglew_static PROPERTIES
-		OUTPUT_NAME "glew"
-		DEBUG_POSTFIX d)
-
 	target_include_directories(libglew_static PUBLIC ${INCLUDE_DIR})
 	target_compile_definitions(libglew_static PUBLIC GLEW_STATIC ${DEFINITIONS})
 	target_link_libraries(libglew_static ${LIBRARIES} )
 	set_target_properties(libglew_static PROPERTIES VERSION ${GLEW_VERSION})
-	install(TARGETS libglew_static ARCHIVE DESTINATION lib)
 endif()
 
 if(glew-cmake_BUILD_SHARED)
 	add_library(libglew_shared SHARED ${LIBGLEW_SRCS})
 
-	set_target_properties(libglew_shared PROPERTIES
-		OUTPUT_NAME "glew"
-		DEBUG_POSTFIX d)
-
 	target_compile_definitions(libglew_shared PUBLIC GLEW_BUILD ${DEFINITIONS})
 	target_include_directories(libglew_shared PUBLIC ${INCLUDE_DIR})
 	target_link_libraries(libglew_shared ${LIBRARIES})
 	set_target_properties(libglew_shared PROPERTIES VERSION ${GLEW_VERSION})
-	install(TARGETS libglew_shared
-		ARCHIVE DESTINATION lib
-		LIBRARY DESTINATION lib
-		RUNTIME DESTINATION bin)
 endif()
 
 if(PKG_CONFIG_REPRESENTATIVE_TARGET)
